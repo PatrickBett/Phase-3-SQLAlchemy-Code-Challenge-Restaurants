@@ -1,61 +1,29 @@
-#imports 
-from sqlalchemy import Column, String, Integer, create_engine
-from sqlalchemy.orm import declarative_base
+from models import Restaurant, Review, Customer
+from sqlalchemy import create_engine,text
+from sqlalchemy.orm import sessionmaker
+from models import Base
 
 
 
-Base = declarative_base()
+engine = create_engine('mysql+mysqlconnector://root:P101/0860g/18@localhost/restaurant', echo=True)
+with engine.connect() as connection:
+    result = connection.execute(text('select "Hi"'))
+    print(result.all())
+# Create tables in the database
+print("CREATING TABLES>>>>>>>")
+Base.metadata.create_all(engine)
 
+print("DONE")
 
-class Restaurant(Base):
-    __tablename__ = 'restaurants'
+# Create a session to interact with the database
+Session = sessionmaker(bind=engine)
+session = Session()
 
-    def _init_(self,name,price):
-        self.id = None
-        self.name = name
-        self.price = price
+def insertdata():
+    # Use integer values for the 'id' and 'price' fields
+    rest = Restaurant(name='ibiza', price=500)
+    session.add(rest)
+    session.commit()
 
-    
-    def Restaurant_reviews():
-        #returns a collection of all the reviews for the `Restaurant'
-        pass
-
-    def Restaurant_customers():
-        #returns a collection of all the customers who reviewed the `Restaurant`
-        pass
-  
-
-class Review(Base):
-    __tablename__ = 'reviews'
-
-    def _init_(self,name,price):
-        self.id = None
-        self.name = name
-        self.price = price
-    
-    def Review_customer():
-        # should return the `Customer` instance for this review
-        pass
- 
-    def Review_restaurant():
-        # should return the `Restaurant` instance for this review
-        pass
- 
-
-
-
-class Customer(Base):
-    __tablename__ = 'customers'
-
-    def _init_(self,firstname,lastname):
-        self.id = None
-        self.firstname = firstname
-        self.lastname = lastname
-    def Customer_reviews():
-        # should return a collection of all the reviews that the `Customer` has left
-        pass
-  
-    def Customer_restaurants():
-        #should return a collection of all the restaurants that the `Customer` has reviewed
-        pass
-       
+if __name__ == "__main__":
+    insertdata()
