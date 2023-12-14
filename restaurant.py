@@ -1,7 +1,7 @@
-from models import Restaurant, Review, Customer
+from app.models import Restaurant, Review, Customer
 from sqlalchemy import create_engine,text
 from sqlalchemy.orm import sessionmaker
-from models import Base
+from app.models import Base
 
 
 
