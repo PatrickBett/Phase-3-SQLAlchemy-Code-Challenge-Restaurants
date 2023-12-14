@@ -10,7 +10,7 @@ with engine.connect() as connection:
     result = connection.execute(text('select "Hi"'))
     print(result.all())
 # Create tables in the database
-print("CREATING TABLES>>>>>>>")
+print("CREATING TABLES>>>>>>")
 Base.metadata.create_all(engine)
 
 print("DONE")
@@ -19,11 +19,29 @@ print("DONE")
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def insertdata():
-    # Use integer values for the 'id' and 'price' fields
-    rest = Restaurant(name='ibiza', price=500)
-    session.add(rest)
-    session.commit()
+# Create sample instances
+restaurant1 = Restaurant(name="Hilton", price=3)
+restaurant2 = Restaurant(name="Heka", price=2)
+customer1 = Customer(firstname="Sunshine", lastname="Nganga")
+customer2 = Customer(firstname="Anton", lastname="Chupa")
 
-if __name__ == "__main__":
-    insertdata()
+# Add instances to the session
+session.add_all([restaurant1, restaurant2, customer1, customer2])
+
+# Commit the changes to the database
+session.commit()
+
+# Create sample reviews
+review1 = Review(star_rating=4, restaurant_name="Hilton", customer_fullname="Patrick")
+review2 = Review(star_rating=5, restaurant_name="Heka", customer_fullname="Brian")
+review3 = Review(star_rating=3, restaurant_name="Sunshine", customer_fullname="Daniel")
+review4 = Review(star_rating=4, restaurant_name="Highrise", customer_fullname="Michale")
+
+# Add reviews to the session
+session.add_all([review1, review2, review3, review4])
+
+# Commit the changes to the database
+session.commit()
+
+# Close the session
+session.close()
